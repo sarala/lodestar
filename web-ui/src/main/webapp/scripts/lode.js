@@ -111,7 +111,7 @@ function _parseOptions(options) {
 
 function _buildVoid(element) {
 
-    var voidSparql = "PREFIX dcterms: <http://purl.org/dc/terms/> " +
+/*    var voidSparql = "PREFIX dcterms: <http://purl.org/dc/terms/> " +
         "PREFIX void: <http://rdfs.org/ns/void#> " +
         "PREFIX pav: <http://purl.org/pav/2.0/> " +
         "PREFIX prov: <http://www.w3.org/ns/prov#> " +
@@ -126,7 +126,21 @@ function _buildVoid(element) {
         "prov:specializationOf ?data . " +
         "?data pav:previousVersion ?previous .  " +
         "}                   " +
-        "ORDER BY DESC(?previous)";
+        "ORDER BY DESC(?previous)";*/
+
+    var voidSparql = "PREFIX dcterms: <http://purl.org/dc/terms/> " +
+        "PREFIX void: <http://rdfs.org/ns/void#> " +
+        "PREFIX pav: <http://purl.org/pav/2.0/> " +
+        "PREFIX prov: <http://www.w3.org/ns/prov#> " +
+        "SELECT ?dataset ?title ?description ?version ?triples ?created " +
+        "where { " +
+        "?dataset a void:Dataset ; " +
+        "dcterms:title ?title; " +
+        "dcterms:description ?description ;  " +
+        "pav:version ?version;      " +
+        "pav:importedOn ?created;   " +
+        "void:triples ?triples ;   " +
+        "}                   " ;
 
 
     $.ajax ( {
@@ -145,14 +159,14 @@ function _buildVoid(element) {
             var desc = _results[0].description.value;
             var version = _results[0].version.value;
             var triples = _results[0].triples.value;
-            var created = $.datepicker.formatDate('MM dd yy', new Date(_results[0].created.value.replace(/T.*/, '')));
+            var created = _results[0].created.value;
 
             var div = $("<div></div>");
             div.append($("<span style='font-weight:bold;'>Dataset description</span>"));
             div.append($("<br/>"));
 //            div.append(datasetURI);
             var ea = $('<a>' + datasetURI + '</a>');
-            ea.attr('href', datasetURI);
+            ea.attr('href', "./describe?uri="+datasetURI);
             div.append("(");
             div.append(ea);
             div.append(")");
@@ -177,7 +191,7 @@ function _buildVoid(element) {
             table.append(row3);
 
             var row4 =$('<tr />');
-            row4.append($('<td align="left">Issued</td>'));
+            row4.append($('<td align="left">created</td>'));
             row4.append($('<td align="right">' + created + '</td>'));
             table.append(row4);
 
@@ -186,7 +200,7 @@ function _buildVoid(element) {
             row5.append($('<td align="right">' + triples + '</td>'));
             table.append(row5);
 
-            if (_results.length > 1) {
+/*            if (_results.length > 1) {
                 var row6 =$('<tr />');
                 row6.append($('<td align="left">Previous versions</td>'));
 
@@ -199,7 +213,7 @@ function _buildVoid(element) {
                     ul6.append($("<li></li>").append(formattedNode));
                 }
                 table.append(row6);
-            }
+            }*/
         },
         error: function (request, status, error) {
             displayError(request.responseText);

@@ -16,17 +16,21 @@ var exampleQueries = [
 
     {
         shortname : "Query 1",
-        description: "People who were born in Berlin before 1900",
-        query: "PREFIX : <http://dbpedia.org/resource/>\n" +
-            "PREFIX dbo: <http://dbpedia.org/ontology/>\n\n" +
-            "SELECT ?name ?birth ?death ?person WHERE {\n" +
-            "?person dbo:birthPlace :Berlin .\n" +
-            "?person dbo:birthDate ?birth .\n" +
-            "?person foaf:name ?name .\n" +
-            "?person dbo:deathDate ?death .\n" +
-            "FILTER (?birth < \"1900-01-01\"^^xsd:date) . \n" +
-            "}   \n" +
-            "ORDER BY ?name"
+        description: "List all species identifers and their names in model http://identifiers.org/biomodels.db/BIOMD0000000001#_000001",
+        query: "SELECT ?speciesid ?name WHERE {\n "+
+            "<http://identifiers.org/biomodels.db/BIOMD0000000001#_000001> <http://biomodels.net/qualifiers#species> ?speciesid . \n "+
+            "?speciesid <http://biomodels.net/qualifiers#name> ?name}"
+    },
+
+    {
+        shortname : "Query 2",
+        description: "Get element annotations of the model http://identifiers.org/biomodels.db/BIOMD0000000001#_000001",
+        query: "SELECT ?e ?p ?q ?a WHERE { \n"+
+        "<http://identifiers.org/biomodels.db/BIOMD0000000001#_000001> ?p ?e . \n" +
+        "?p rdfs:subPropertyOf <http://biomodels.net/qualifiers#sbmlElement> . \n" +
+        "?e ?q ?a . \n" +
+        "?q rdfs:subPropertyOf <http://biomodels.net/qualifiers#sbmlAnnotation> \n"+
+        "}"
     }
 
 ]

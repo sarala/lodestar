@@ -6,6 +6,13 @@
             <param name="ConversionPattern" value="%d %-5p [%t] %C{2} (%F:%L) - %m%n"/>
         </layout>
     </appender>
+    <appender name="biomodels-log" class="org.apache.log4j.DailyRollingFileAppender">
+            <param name="DatePattern" value="'.'yyyy-MM-dd"/>
+                <param name="File" value="${catalina.base}/logs/${tomcat.hostname}/biomodels.log"/>
+            <layout class="org.apache.log4j.PatternLayout">
+                <param name="ConversionPattern" value="%d %-5p [%t] %C{2} (%F:%L) - %m%n"/>
+            </layout>
+        </appender>
 
     <logger name="org.springframework" additivity="false">
         <level value="WARN"/>
