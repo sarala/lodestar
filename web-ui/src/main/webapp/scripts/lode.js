@@ -140,8 +140,9 @@ function _buildVoid(element) {
         "pav:version ?version;      " +
         "pav:importedOn ?created;   " +
         "void:triples ?triples ;   " +
-        "}                   " ;
-
+        "?data pav:previousVersion ?previous .  " +
+        "}                   " +
+        "ORDER BY DESC(?previous)";
 
     $.ajax ( {
         type: 'GET',
@@ -200,7 +201,7 @@ function _buildVoid(element) {
             row5.append($('<td align="right">' + triples + '</td>'));
             table.append(row5);
 
-/*            if (_results.length > 1) {
+            if (_results.length > 1) {
                 var row6 =$('<tr />');
                 row6.append($('<td align="left">Previous versions</td>'));
 
@@ -213,7 +214,7 @@ function _buildVoid(element) {
                     ul6.append($("<li></li>").append(formattedNode));
                 }
                 table.append(row6);
-            }*/
+            }
         },
         error: function (request, status, error) {
             displayError(request.responseText);
