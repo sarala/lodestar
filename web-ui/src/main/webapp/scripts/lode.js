@@ -121,9 +121,8 @@ function _buildVoid(element) {
         "dcterms:title ?title; " +
         "dcterms:description ?description ;  " +
         "pav:version ?version;      " +
-        "dcterms:issued ?created;   " +
-        "void:triples ?triples ;   " +
-        "prov:specializationOf ?data . " +
+        "pav:importedOn ?created;   " +
+        "void:triples ?triples .   " +
         "?data pav:previousVersion ?previous .  " +
         "}                   " +
         "ORDER BY DESC(?previous)";
@@ -145,7 +144,7 @@ function _buildVoid(element) {
             var desc = _results[0].description.value;
             var version = _results[0].version.value;
             var triples = _results[0].triples.value;
-            var created = $.datepicker.formatDate('MM dd yy', new Date(_results[0].created.value.replace(/T.*/, '')));
+            var created = _results[0].created.value;
 
             var div = $("<div></div>");
             div.append($("<span style='font-weight:bold;'>Dataset description</span>"));
@@ -177,7 +176,7 @@ function _buildVoid(element) {
             table.append(row3);
 
             var row4 =$('<tr />');
-            row4.append($('<td align="left">Issued</td>'));
+            row4.append($('<td align="left">Created</td>'));
             row4.append($('<td align="right">' + created + '</td>'));
             table.append(row4);
 

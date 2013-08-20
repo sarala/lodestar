@@ -14,19 +14,39 @@
 
 var exampleQueries = [
 
+    {   shortname : "Query 1",
+        description: "List all pathways",
+        query: "SELECT DISTINCT ?pathway ?pathwayname  \n" +
+            "WHERE  \n" +
+            "{\n" +
+            "?pathway rdf:type biopax3:Pathway . \n" +
+            "?pathway biopax3:displayName ?pathwayname #   \n" +
+            "}     \n"
+    }  ,
+
     {
-        shortname : "Query 1",
-        description: "People who were born in Berlin before 1900",
-        query: "PREFIX : <http://dbpedia.org/resource/>\n" +
-            "PREFIX dbo: <http://dbpedia.org/ontology/>\n\n" +
-            "SELECT ?name ?birth ?death ?person WHERE {\n" +
-            "?person dbo:birthPlace :Berlin .\n" +
-            "?person dbo:birthDate ?birth .\n" +
-            "?person foaf:name ?name .\n" +
-            "?person dbo:deathDate ?death .\n" +
-            "FILTER (?birth < \"1900-01-01\"^^xsd:date) . \n" +
-            "}   \n" +
-            "ORDER BY ?name"
+        shortname : "Query 2",
+        description: "Pathways that references Insulin (http://purl.uniprot.org/uniprot/P01308)",
+        query: "SELECT DISTINCT ?pathway ?pathwayname \n" +
+            "WHERE \n" +
+            "{?pathway rdf:type biopax3:Pathway .  \n" +
+            "?pathway biopax3:displayName ?pathwayname .\n" +
+            "?pathway biopax3:pathwayComponent ?reaction . \n" +
+            "?reaction rdf:type biopax3:BiochemicalReaction . \n" +
+            "{          \n" +
+            "{?reaction ?rel ?protein .}   \n" +
+            "UNION  \n" +
+            "{  \n" +
+            "?reaction  ?rel  ?complex . \n" +
+            "?complex rdf:type biopax3:Complex .  \n" +
+            "?complex ?comp ?protein . \n" +
+            "}} \n" +
+            "?protein rdf:type biopax3:Protein . \n" +
+            "?protein biopax3:entityReference <http://purl.uniprot.org/uniprot/P01308> \n" +
+
+            "}    \n" +
+
+            "LIMIT 100  \n"
     }
 
 ]
