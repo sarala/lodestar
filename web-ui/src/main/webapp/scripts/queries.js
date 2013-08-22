@@ -20,7 +20,7 @@ var exampleQueries = [
             "WHERE  \n" +
             "{\n" +
             "?pathway rdf:type biopax3:Pathway . \n" +
-            "?pathway biopax3:displayName ?pathwayname #   \n" +
+            "?pathway biopax3:displayName ?pathwayname   \n" +
             "}     \n"
     }  ,
 

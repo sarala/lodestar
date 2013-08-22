@@ -51,6 +51,7 @@
         <filter-name>cors</filter-name>
         <url-pattern>/*</url-pattern>
       </filter-mapping>
+
     <!-- tukey URL rewrite filters -->
     <filter>
            <filter-name>UrlRewriteFilter</filter-name>
