@@ -151,7 +151,7 @@ function _buildVoid(element) {
             div.append($("<br/>"));
 //            div.append(datasetURI);
             var ea = $('<a>' + datasetURI + '</a>');
-            ea.attr('href', datasetURI);
+            ea.attr('href', "./describe?uri="+datasetURI);
             div.append("(");
             div.append(ea);
             div.append(")");
