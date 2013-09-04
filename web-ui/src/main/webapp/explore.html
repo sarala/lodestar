@@ -72,7 +72,7 @@ For optimal performance, use a custom Modernizr build: www.modernizr.com/downloa
 
 </head>
 
-<body onload="$('#data-explorer-content').explore({namespaces : lodeNamespacePrefixes});" class="level2"><!-- add any of your classes or IDs -->
+<body onload="$('#data-explorer-content').explore({namespaces : lodeNamespacePrefixes});" class="level1 section-services"><!-- add any of your classes or IDs -->
 <!--<body onload="initExplorer()" class="level2">&lt;!&ndash; add any of your classes or IDs &ndash;&gt;-->
 <div id="skip-to">
     <ul>
@@ -102,43 +102,46 @@ For optimal performance, use a custom Modernizr build: www.modernizr.com/downloa
 
         </div>
 
-        <div id="local-masthead" class="masthead grid_24 nomenu" style="background-color: #E1EEE9">
+        <div id="local-masthead" class="masthead grid_24 nomenu">
 
-            <!-- local-title -->
-            <!-- NB: for additional title style patterns, see http://frontier.ebi.ac.uk/web/style/patterns -->
-            <div class="logo-title" id="local-title">
+               <!-- local-title -->
+               <!-- NB: for additional title style patterns, see http://frontier.ebi.ac.uk/web/style/patterns -->
 
-                   <a href="./" title="Back to Reactome Linked Data homepage">
-                        <img style="width: 80px;height: 80px; display: inline;" alt="reactome linked data logo" src="images/atlas_rdf_logo_80px.gif"/>
+       			      <div class="grid_24" id="local-title">
+                     <h1>RDF Services</h1>
+                             </div>
 
-                    </a><span style="padding-top: 5px"><h1 style="color: #000000; text-shadow: 0px 0px #E1EEE9">Reactome Linked Data</h1></span>
-            </div>
+               <!-- /local-title -->
 
-            <!-- /local-title -->
+               <!-- local-nav -->
+       			  <nav>
+       				<ul id="local_nav" class="grid_24">
+       				  <li class="menu-736 menu- first " id=""><a href="/rdf/" title="">RDF Platform</a></li>
+                         <li class="menu-825 menu- " id=""><a href="/rdf/about-technology">About the Technology</a></li>
+                         <li class="menu-739 active-trail menu- " id=""><li class="menu-739 active-trail menu-  active-trail" id=""><a href="/rdf/services" class="active-trail">Services</a></li>
+                         <li class="menu-899 menu- " id=""><a href="/rdf/example-sparql-queries" title="Example SPARQL queries">Examples</a></li>
+                         <li class="menu-740 menu- " id=""><a href="/rdf/documentation">Documentation</a></li>
+                         <li class="menu-741 menu- " id=""><a href="/rdf/faq" title="">FAQ</a></li>
+                         <li class="menu-742 menu- last " id=""><a href="/rdf/feedback" title="">Feedback</a></li>
+                       </ul>
+                     </nav>
+               <!-- /local-nav -->
 
-            <!-- local-nav -->
-            <nav>
-                <ul class="grid_24" id="local-nav">
-                    <li class="first active">
-                        <a href="./index.html">Reactome Linked Data</a>
-                    </li>
-                    <!--<li>-->
-                        <!--<a href="./about.html">Getting Started</a>-->
-                    <!--</li>-->
-                    <li>
-                        <a href="./sparql">SPARQL</a>
-                    </li>
-                </ul>
-            </nav>
-
-
-            <!-- /local-nav -->
-
-        </div>
+           </div>
     </header>
 
-    <div id="content" role="main" class="grid_24 clearfix">
+        <div id="content" role="main" class="grid_24 clearfix">
 
+
+        	  <nav id="breadcrumb">
+        		  <p>
+        		    <a href="/rdf/services">Services</a> &gt;
+        		     <a href="/rdf/services/reactome">Reactome</a> &gt;
+        		     Reactome Linked Data
+        		    </p>
+        	  </nav>
+
+            <h3>Reactome Linked Data</h3>
         <!-- If you require a breadcrumb trail, its root should be your service.
 You don't need a breadcrumb trail on the homepage of your service... -->
         <!--<nav id="breadcrumb">-->
@@ -233,7 +236,7 @@ document.write(unescape("%3Cscript  src='" + gaJsHost + "google-analytics.com/ga
 </script>
 <script type="text/javascript">
 try{
-var pageTracker = _gat._getTracker("UA-35314047-1");
+var pageTracker = _gat._getTracker("UA-43707051-1");
 pageTracker._trackPageview();
 } catch(err) {}</script>
 
