@@ -16,21 +16,32 @@ var exampleQueries = [
 
     {
         shortname : "Query 1",
-        description: "List all species identifers and their names in model http://identifiers.org/biomodels.db/BIOMD0000000001#_000001",
+        description: "List all species identifers and their names in model http://identifiers.org/biomodels.db/BIOMD0000000001",
         query: "SELECT ?speciesid ?name WHERE {\n "+
-            "<http://identifiers.org/biomodels.db/BIOMD0000000001#_000001> <http://biomodels.net/qualifiers#species> ?speciesid . \n "+
-            "?speciesid <http://biomodels.net/qualifiers#name> ?name}"
+            "<http://identifiers.org/biomodels.db/BIOMD0000000001> <http://identifiers.org/biomodels.vocabulary#species> ?speciesid . \n "+
+            "?speciesid <http://identifiers.org/biomodels.vocabulary#name> ?name}"
     },
 
     {
         shortname : "Query 2",
-        description: "Get element annotations of the model http://identifiers.org/biomodels.db/BIOMD0000000001#_000001",
-        query: "SELECT ?e ?p ?q ?a WHERE { \n"+
-        "<http://identifiers.org/biomodels.db/BIOMD0000000001#_000001> ?p ?e . \n" +
-        "?p rdfs:subPropertyOf <http://biomodels.net/qualifiers#sbmlElement> . \n" +
-        "?e ?q ?a . \n" +
-        "?q rdfs:subPropertyOf <http://biomodels.net/qualifiers#sbmlAnnotation> \n"+
+        description: "Get element annotations of the model http://identifiers.org/biomodels.db/BIOMD0000000001",
+        query: "SELECT ?element ?qualifier ?annotation WHERE { \n"+
+        "<http://identifiers.org/biomodels.db/BIOMD0000000001> ?p ?element . \n" +
+        "?p rdfs:subPropertyOf <http://identifiers.org/biomodels.vocabulary#sbmlElement> . \n" +
+        "?element ?qualifier ?annotation . \n" +
+        "?qualifier rdfs:subPropertyOf <http://identifiers.org/biomodels.vocabulary#sbmlAnnotation> \n"+
         "}"
+    },
+
+    {
+        shortname : "Query 3",
+        description: "All model elements with annotations to acetylcholine-gated channel complex (http://purl.obolibrary.org/obo/GO:0005892)",
+        query: "SELECT ?modelElement ?elementType ?qualifier WHERE { \n"+
+            "?modelElement ?qualifier <http://purl.obolibrary.org/obo/GO:0005892> .  \n"+
+            "?qualifier rdfs:subPropertyOf <http://identifiers.org/biomodels.vocabulary#sbmlAnnotation> . \n"+
+            "?modelElement rdf:type ?elementType \n"+
+            "}"
     }
+
 
 ]
