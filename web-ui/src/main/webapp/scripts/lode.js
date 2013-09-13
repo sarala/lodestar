@@ -163,14 +163,12 @@ function _buildVoid(element) {
             var created = _results[0].created.value;
 
             var div = $("<div></div>");
-            div.append($("<span style='font-weight:bold;'>Dataset description</span>"));
-            div.append($("<br/>"));
-//            div.append(datasetURI);
+            var para =$("<p></p>");
+            para.append("Full VOID dataset description at ");
             var ea = $('<a>' + datasetURI + '</a>');
             ea.attr('href', "./describe?uri="+datasetURI);
-            div.append("(");
-            div.append(ea);
-            div.append(")");
+            para.append(ea);
+            div.append(para)
             element.append(div);
 
             var table = $("<table cellpadding='0' cellspacing='0' width='100%'></table>")
