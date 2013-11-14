@@ -78,7 +78,7 @@ For optimal performance, use a custom Modernizr build: www.modernizr.com/downloa
 <body onload="$('#content').sparql({
     namespaces : lodeNamespacePrefixes,
     example_queries: exampleQueries,
-    default_query: 'SELECT ?speciesid ?name WHERE {\n <http://identifiers.org/biomodels.db/BIOMD0000000001> <http://identifiers.org/biomodels.vocabulary#species> ?speciesid . \n ?speciesid <http://identifiers.org/biomodels.vocabulary#name> ?name}',
+    default_query: 'SELECT ?speciesid ?name WHERE {\n <http://identifiers.org/biomodels.db/BIOMD0000000001> sbmlrdf:species ?speciesid . \n ?speciesid sbmlrdf:name ?name}',
     logging: false});" class="level1 section-services"><!-- add any of your classes or IDs -->
 <div id="skip-to">
     <ul>

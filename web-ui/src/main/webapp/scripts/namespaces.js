@@ -18,7 +18,8 @@ var lodeNamespacePrefixes = {
     dc: 'http://purl.org/dc/elements/1.1/',
     dcterms: 'http://purl.org/dc/terms/',
     foaf: 'http://xmlns.com/foaf/0.1/',
-    skos: 'http://www.w3.org/2004/02/skos/core#'
+    skos: 'http://www.w3.org/2004/02/skos/core#',
+    sbmlrdf: 'http://identifiers.org/biomodels.vocabulary#'
 
 };
 

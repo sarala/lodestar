@@ -18,8 +18,8 @@ var exampleQueries = [
         shortname : "Query 1",
         description: "List all species identifers and their names in model http://identifiers.org/biomodels.db/BIOMD0000000001",
         query: "SELECT ?speciesid ?name WHERE {\n "+
-            "<http://identifiers.org/biomodels.db/BIOMD0000000001> <http://identifiers.org/biomodels.vocabulary#species> ?speciesid . \n "+
-            "?speciesid <http://identifiers.org/biomodels.vocabulary#name> ?name}"
+            "<http://identifiers.org/biomodels.db/BIOMD0000000001> sbmlrdf:species ?speciesid . \n "+
+            "?speciesid sbmlrdf:name ?name}"
     },
 
     {
@@ -27,9 +27,9 @@ var exampleQueries = [
         description: "Get element annotations of the model http://identifiers.org/biomodels.db/BIOMD0000000001",
         query: "SELECT ?element ?qualifier ?annotation WHERE { \n"+
         "<http://identifiers.org/biomodels.db/BIOMD0000000001> ?p ?element . \n" +
-        "?p rdfs:subPropertyOf <http://identifiers.org/biomodels.vocabulary#sbmlElement> . \n" +
+        "?p rdfs:subPropertyOf sbmlrdf:sbmlElement . \n" +
         "?element ?qualifier ?annotation . \n" +
-        "?qualifier rdfs:subPropertyOf <http://identifiers.org/biomodels.vocabulary#sbmlAnnotation> \n"+
+        "?qualifier rdfs:subPropertyOf sbmlrdf:sbmlAnnotation \n"+
         "}"
     },
 
@@ -38,7 +38,7 @@ var exampleQueries = [
         description: "All model elements with annotations to acetylcholine-gated channel complex (http://purl.obolibrary.org/obo/GO:0005892)",
         query: "SELECT ?modelElement ?elementType ?qualifier WHERE { \n"+
             "?modelElement ?qualifier <http://purl.obolibrary.org/obo/GO:0005892> .  \n"+
-            "?qualifier rdfs:subPropertyOf <http://identifiers.org/biomodels.vocabulary#sbmlAnnotation> . \n"+
+            "?qualifier rdfs:subPropertyOf sbmlrdf:sbmlAnnotation . \n"+
             "?modelElement rdf:type ?elementType \n"+
             "}"
     }
