@@ -323,9 +323,17 @@ public class JenaSparqlService implements SparqlService {
             if (format.equals(TupleQueryFormats.JSON.toString())) {
                 ResultSetFormatter.outputAsJSON(output, value);
             }
+            else if (format.equals(TupleQueryFormats.CSV.toString())) {
+                ResultSetFormatter.outputAsCSV(output, value);
+            }
+            else if (format.equals(TupleQueryFormats.TSV.toString())) {
+                ResultSetFormatter.outputAsTSV(output, value);
+            }
             else {
                 ResultSetFormatter.outputAsXML(output, value);
             }
+//            output.flush();
+//            output.close();
         } catch (Exception e) {
             log.error("Error retrieving results for " + q1, e);
         }
