@@ -35,9 +35,9 @@ var exampleQueries = [
 
     {
         shortname : "Query 3",
-        description: "All model elements with annotations to acetylcholine-gated channel complex (http://purl.obolibrary.org/obo/GO:0005892)",
+        description: "All model elements with annotations to acetylcholine-gated channel complex (http://identifiers.org/go/GO:0005892)",
         query: "SELECT ?modelElement ?elementType ?qualifier WHERE { \n"+
-            "?modelElement ?qualifier <http://purl.obolibrary.org/obo/GO:0005892> .  \n"+
+            "?modelElement ?qualifier <http://identifiers.org/go/GO:0005892> .  \n"+
             "?qualifier rdfs:subPropertyOf sbmlrdf:sbmlAnnotation . \n"+
             "?modelElement rdf:type ?elementType \n"+
             "}"
