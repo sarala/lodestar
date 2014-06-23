@@ -16,17 +16,21 @@ var exampleQueries = [
 
     {
         shortname : "Query 1",
-        description: "People who were born in Berlin before 1900",
-        query: "PREFIX : <http://dbpedia.org/resource/>\n" +
-            "PREFIX dbo: <http://dbpedia.org/ontology/>\n\n" +
-            "SELECT ?name ?birth ?death ?person WHERE {\n" +
-            "?person dbo:birthPlace :Berlin .\n" +
-            "?person dbo:birthDate ?birth .\n" +
-            "?person foaf:name ?name .\n" +
-            "?person dbo:deathDate ?death .\n" +
-            "FILTER (?birth < \"1900-01-01\"^^xsd:date) . \n" +
-            "}   \n" +
-            "ORDER BY ?name"
-    }
+        description: "Find other URI schemes that can identify http://www.ebi.ac.uk/QuickGO/GTerm?id=GO:0006915",
+        query: "SELECT ?target WHERE {\n" +
+            "<http://www.ebi.ac.uk/QuickGO/GTerm?id=GO:0006915> owl:sameAs  ?target \n" +
+            "}"
+
+    },
+
+    {
+            shortname : "Query 2",
+            description: "Check whether two URI schemes are the same. Eg: http://www.ebi.ac.uk/QuickGO/GTerm?id=GO:0006915 and http://purl.bioontology.org/ontology/GO/GO:0006915",
+            query: "ASK  { \n" +
+                "?taget owl:sameAs  <http://www.ebi.ac.uk/QuickGO/GTerm?id=GO:0006915>; owl:sameAs <http://purl.bioontology.org/ontology/GO/GO:0006915> \n" +
+                 "}"
+
+        }
+
 
 ]

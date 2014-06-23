@@ -84,7 +84,7 @@ function _parseOptions(options) {
         'explore_servlet_name': 'explore',
         'results_per_page' : 25,
         'logging' : false,
-        'default_query' : "SELECT DISTINCT ?class \nwhere {[] a ?class}",
+        'default_query' : "SELECT ?target WHERE {\n<http://www.ebi.ac.uk/QuickGO/GTerm?id=GO:0006915> owl:sameAs  ?target \n}",
         'namespaces' : {
             rdf: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
             rdfs: 'http://www.w3.org/2000/01/rdf-schema#',
