@@ -7,7 +7,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import uk.ac.ebi.fgpt.lode.exception.LodeException;
 import uk.ac.ebi.fgpt.lode.service.JenaQueryExecutionService;
-import virtuoso.jdbc3.VirtuosoDataSource;
 import virtuoso.jena.driver.VirtGraph;
 import virtuoso.jena.driver.VirtuosoQueryExecution;
 import virtuoso.jena.driver.VirtuosoQueryExecutionFactory;
@@ -72,15 +71,23 @@ public class JenaVirtuosoExecutorService implements JenaQueryExecutionService {
         this.virtuosoAllGraphs = virtuosoAllGraphs;
     }
 
+
     public QueryExecution getQueryExecution(Graph g, Query query, boolean withInference) throws LodeException {
         if (isNullOrEmpty(getEndpointURL())) {
             log.error("No sparql endpoint");
             throw new LodeException("You must specify a SPARQL endpoint URL");
         }
-        VirtGraph set = new VirtGraph(getEndpointURL(), getVirtuosoUser() , getVirtuosoPassword());
+        VirtGraph set =  (VirtGraph) g;
         set.setReadFromAllGraphs(isVirtuosoAllGraphs());
         if (withInference) {
             set.setRuleSet(getVirtuosoInferenceRule());
+        }
+        if (query.isDescribeType()) {
+            /** todo this is a hack to get virtuoso describe queries
+             *  for concise bound description of given subject (i.e., SPO + CBD of each blank node object found by SPO, recursively);
+             **/
+            String squery = "DEFINE sql:describe-mode \"CBD\"\n" + query.serialize();
+            return virtuoso.jena.driver.VirtuosoQueryExecutionFactory.create(squery, set);
         }
         return VirtuosoQueryExecutionFactory.create(query, set);
     }
@@ -90,8 +97,7 @@ public class JenaVirtuosoExecutorService implements JenaQueryExecutionService {
             log.error("No sparql endpoint");
             throw new LodeException("You must specify a SPARQL endpoint URL");
         }
-        new VirtuosoDataSource();
-        VirtGraph set = new VirtGraph(getEndpointURL(), getVirtuosoUser() , getVirtuosoPassword());
+        VirtGraph set =  (VirtGraph) g;
         set.setReadFromAllGraphs(isVirtuosoAllGraphs());
         if (withInference) {
             set.setRuleSet(getVirtuosoInferenceRule());
@@ -109,7 +115,11 @@ public class JenaVirtuosoExecutorService implements JenaQueryExecutionService {
     }
 
     public Graph getDefaultGraph() {
-        return new VirtGraph();
+        return new VirtGraph(getEndpointURL(), getVirtuosoUser() , getVirtuosoPassword());
+    }
+
+    public Graph getNamedGraph(String graphName) {
+        return new VirtGraph(graphName, getEndpointURL(), getVirtuosoUser() , getVirtuosoPassword());
     }
 
 }

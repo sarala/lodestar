@@ -140,7 +140,7 @@ public class JenaExploreService implements ExploreService {
                 if (solution.contains("resourceLabel")) {
                     label = solution.getLiteral("resourceLabel").getLexicalForm();
                 }
-                if (solution.contains("resourceLabel")) {
+                if (solution.contains("resourceDescription")) {
                     desc = solution.getLiteral("resourceDescription").getLexicalForm();
                 }
                 resources.setPropertyUri(type.toString());
@@ -152,7 +152,9 @@ public class JenaExploreService implements ExploreService {
             log.error("Error retrieving results for " + query, e);
         }
         finally {
-            endpoint.close();
+            if (endpoint != null) {
+                endpoint.close();
+            }
             if (g != null ) {
                 g.close();
             }
@@ -450,7 +452,9 @@ public class JenaExploreService implements ExploreService {
             log.error("Error retrieving results for " + query, e);
         }
         finally {
-            endpoint.close();
+            if (endpoint != null) {
+                endpoint.close();
+            }
             if (g != null ) {
                 g.close();
             }

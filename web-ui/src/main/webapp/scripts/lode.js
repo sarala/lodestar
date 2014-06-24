@@ -24,6 +24,8 @@ var loadstarExploreService;
 var lodestarResultsPerPage;
 var lodestarIslogging;
 var lodestarDefaultQuery;
+var lodestarVoidQuery;
+var lodestarRdfsInference;
 var lodestarDefaultResourceImg;
 
 var loadstarNamespaces = {};
@@ -40,7 +42,7 @@ var sparqlQueryTextArea;
     var lodestarDiv = $("<div id='lodestar-main' class='ui-widget ui-corner-all'></div>");
     var contentsDiv = $("<div id='lodestar-contents' class='ui-widget ui-corner-all'></div>");
     var errorDiv = $("<div id='error-div' class='ui-state-error' style='display: none;'/>");
-    errorDiv.append($("<p class='alert'>Error</p>").append($("<span id='error-text'></span>")));
+    errorDiv.append($("<p class='alert'>Error: </p>").append($("<span id='error-text'></span>")));
 
     var appdetails = $("<div id='lodestar-description' class='ui-widget ui-corner-all'/>")
         .append($("<p></p>")
@@ -83,8 +85,10 @@ function _parseOptions(options) {
         'query_servlet_name': 'query',
         'explore_servlet_name': 'explore',
         'results_per_page' : 25,
+        'inference' : false,
         'logging' : false,
         'default_query' : "SELECT ?target WHERE {\n<http://www.ebi.ac.uk/QuickGO/GTerm?id=GO:0006915> owl:sameAs  ?target \n}",
+        'void_query' : "SELECT DISTINCT ?s ?p ?o \nwhere {?s a <http://rdfs.org/ns/void#Dataset>\n OPTIONAL {?s ?p ?o} }",
         'namespaces' : {
             rdf: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
             rdfs: 'http://www.w3.org/2000/01/rdf-schema#',
@@ -97,7 +101,9 @@ function _parseOptions(options) {
     loadstarExploreService = _options.servlet_base + "/" + _options.explore_servlet_name;
     lodestarResultsPerPage = _options.results_per_page;
     lodestarIslogging = _options.logging;
+    lodestarRdfsInference = _options.inference;
     lodestarDefaultQuery = _options.default_query;
+    lodestarVoidQuery = _options.void_query;
     loadstarNamespaces = _options.namespaces;
     lodestarDefaultResourceImg =  _options.default_resource_image_url;
 
@@ -292,19 +298,22 @@ function _buildSparqlPage(element) {
                 .append('<option value="HTML">HTML</option>')
                 .append('<option value="XML">XML</option>')
                 .append('<option value="JSON">JSON</option>')
+                .append('<option value="CSV">CSV</option>')
+                .append('<option value="TSV">TSV</option>')
                 .append('<option value="RDF/XML">RDF/XML</option>')
                 .append('<option value="N3">RDF/N3</option>')
         )
     );
 
-    // todo make with rdfs inference optional
-    section1.append(
-        $("<p></p>").append(
-            $("<label for='inference'>RDFS inference? </label>"))
-            .append(
-            $("<input type='checkbox' id='inference' name='inference' value='true'/>")
-        )
-    );
+    if (lodestarRdfsInference) {
+        section1.append(
+            $("<p></p>").append(
+                $("<label for='inference'>RDFS inference? </label>"))
+                .append(
+                $("<input type='checkbox' id='inference' name='inference' value='true'/>")
+            )
+        );
+    }
 
     section1.append(
         $("<p></p>").append(
@@ -324,8 +333,8 @@ function _buildSparqlPage(element) {
 
 
     section1.append(
-        $("<p></p>").append("<input type='button' class='submit ui-button ui-widget ui-corner-all' style='display: inline;'  onclick='submitQuery()' value='Submit Query'/>")
-                    .append("<input type='button' class='submit ui-button ui-widget ui-corner-all' style='display: inline;' onclick='reloadPage()' value='Reset' />")
+        $("<p></p>").append("<input type='button' class='submit ui-button ui-widget ui-corner-all' style='display: inline;'  onclick='submitQuery()' value='Submit Query' />&nbsp;")
+                    .append("<input type='button' class='submit  ui-button ui-widget ui-corner-all' style='display: inline;' onclick='reloadPage()' value='Reset' />")
 
     );
 
@@ -366,6 +375,8 @@ function initSparql() {
 }
 
 function submitQuery() {
+    // reset any offset
+    $('#offset').val(0);
     $('#lodestar-sparql-form').submit();
 }
 
@@ -406,12 +417,14 @@ function querySparql () {
         $('#offset').val(offset);
     }
 
-    if (queryString.match(/inference=/)) {
-        var iv = this._betterUnescape(queryString.match(/inference=([^&]*)/)[1]);
+    if (lodestarRdfsInference) {
+        if (queryString.match(/inference=/)) {
+            var iv = this._betterUnescape(queryString.match(/inference=([^&]*)/)[1]);
 
-        if (iv == 'true') {
-            rdfs = "true";
-            $('#inference').attr("checked", true);
+            if (iv == 'true') {
+                rdfs = "true";
+                $('#inference').attr("checked", true);
+            }
         }
     }
 
@@ -473,8 +486,14 @@ function querySparql () {
             else if (rendering.match(/JSON/)) {
                 location.href = loadestarQueryService + "?query=" + encodeURIComponent(querytext) + "&format=JSON&limit=" + limit + "&offset=" + offset+ "&inference=" + rdfs;
             }
+            else if (rendering.match(/CSV/)) {
+                location.href = loadestarQueryService + "?query=" + encodeURIComponent(querytext) + "&format=CSV&limit=" + limit + "&offset=" + offset+ "&inference=" + rdfs;
+            }
+            else if (rendering.match(/TSV/)) {
+                location.href = loadestarQueryService + "?query=" + encodeURIComponent(querytext) + "&format=TSV&limit=" + limit + "&offset=" + offset+ "&inference=" + rdfs;
+            }
             else  {
-                displayError("You can only render SELECT queries in either HTML, XML or JSON format")
+                displayError("You can only render SELECT queries in either HTML, XML, CSV, TSV or JSON format")
                 return;
             }
         }
@@ -609,33 +628,72 @@ function renderSparqlResultJsonAsTable (json, tableid) {
     $("#" + tableid).html("");
 
     var _json = json;
-    try {
-        var _variables = _json.head.vars;
-        var _results = _json.results.bindings;
 
-        var header = createTableHeader(_variables);
+    if (_json == undefined) {
+        displayError("There was a problem getting results for this query");
+    }
+    else {
+        try {
 
-        $("#" + tableid).append(header);
+                if (_json.results) {
+                    if (_json.results.bindings) {
+                        var _results = _json.results.bindings;
 
-        displayPagination();
+                        if (_results.length ==0) {
+                            alert("No results for query")
+                        }
+                        else {
+                            var _variables = _json.head.vars;
 
-        for (var i = 0; i < _results.length; i++) {
-            var row =$('<tr />');
-            var binding = _results[i];
-            for (var j = 0 ; j < _variables.length; j++) {
-                var varName = _variables[j];
-                var formattedNode = _formatNode(binding[varName], varName);
-                var cell = $('<td />');
-                cell.append (formattedNode);
-                row.append(cell);
+                            var header = createTableHeader(_variables);
+
+                            $("#" + tableid).append(header);
+
+                            displayPagination();
+
+                            for (var i = 0; i < _results.length; i++) {
+                                var row =$('<tr />');
+                                var binding = _results[i];
+                                for (var j = 0 ; j < _variables.length; j++) {
+                                    var varName = _variables[j];
+                                    var formattedNode = _formatNode(binding[varName], varName);
+                                    var cell = $('<td />');
+                                    cell.append (formattedNode);
+                                    row.append(cell);
+                                }
+                                $("#" + tableid).append(row);
+                            }
+                        }
+                    }
+                    else {
+                        displayError("No result bindings");
+                    }
+                }
+                else if (_json.boolean != undefined)  {
+                    var header = createTableHeader(["boolean"]);
+                    $("#" + tableid).append(header);
+                    var row =$('<tr />');
+                    var cell = $('<td />');
+                    if (_json.boolean) {
+                        cell.append ("True");
+                    }
+                    else {
+                        cell.append ("False");
+                    }
+                    row.append(cell);
+                    $("#" + tableid).append(row);
+                }
+                else {
+                    alert("no results!")
+                }
+
             }
-            $("#" + tableid).append(row);
-        }
-    }
-    catch (err) {
+            catch (err) {
+                displayError("Problem rendering results: "+ err.message);
+            }
 
-        displayError("Problem rendering results: "+ err.message);
     }
+
 
 }
 
@@ -954,19 +1012,24 @@ function renderAllResourceTypes(element, exclude) {
                 var div = element;
                 var p = $("<p></p>");
 
-                for (var x = 0; x < data.length; x ++) {
-                    for (var z = 0; z <data[x].relatedObjects.length; z++) {
-                        var description = data[x].relatedObjects[z].description;
-                        var uri = data[x].relatedObjects[z].uri;
-                        var label = data[x].relatedObjects[z].label;
+                if (data.length == 0) {
+                    p.append("No more type information available for this resource");
+                }
+                else {
+                    for (var x = 0; x < data.length; x ++) {
+                        for (var z = 0; z <data[x].relatedObjects.length; z++) {
+                            var description = data[x].relatedObjects[z].description;
+                            var uri = data[x].relatedObjects[z].uri;
+                            var label = data[x].relatedObjects[z].label;
 
-                        if (!exclude[uri]) {
-                            p.append(_hrefBuilder(uri, label, true));
-                            if (description) {
-                                p.append(" : ");
-                                p.append(description)
+                            if (!exclude[uri]) {
+                                p.append(_hrefBuilder(uri, label, true));
+                                if (description) {
+                                    p.append(" : ");
+                                    p.append(description)
+                                }
+                                p.append($("<br/>"));
                             }
-                            p.append($("<br/>"));
                         }
                     }
                 }

@@ -1,10 +1,9 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>ebi-lode</groupId>
     <artifactId>ebi-lode</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.1</version>
+    <version>1.2-SNAPSHOT</version>
     <modules>
         <module>lode-core-api</module>
         <module>web-ui</module>
@@ -90,9 +89,9 @@
             <url>http://coconut.ebi.ac.uk:8081/artifactory/local-repo</url>
         </snapshotRepository>
         <site>
-            <id>coconut.ebi.ac.uk</id>
-            <name>coconut.ebi.ac.uk-snapshots</name>
-            <url>http://coconut.ebi.ac.uk:8081/artifactory/local-repo</url>
+            <id>lodestar-site</id>
+            <name>lodestar site</name>
+            <url>scp://orange.ebi.ac.uk/ebi/microarray/home/fgpt/project-web/lodestar</url>
         </site>
     </distributionManagement>
 
@@ -156,5 +155,12 @@
 
         </dependencies>
     </dependencyManagement>
+
+    <!-- Version control (internal SVN) -->
+    <scm>
+        <connection>scm:git:https://github.com/EBISPOT/lodestar</connection>
+        <developerConnection>scm:git:https://github.com/EBISPOT/lodestar</developerConnection>
+        <url>http://github.com/EBISPOT/lodestar</url>
+    </scm>
 
 </project>

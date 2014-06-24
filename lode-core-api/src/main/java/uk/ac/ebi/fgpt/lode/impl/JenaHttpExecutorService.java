@@ -2,14 +2,12 @@ package uk.ac.ebi.fgpt.lode.impl;
 
 import com.hp.hpl.jena.graph.Graph;
 import com.hp.hpl.jena.query.*;
-import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.sparql.engine.http.QueryEngineHTTP;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import uk.ac.ebi.fgpt.lode.exception.LodeException;
 import uk.ac.ebi.fgpt.lode.service.JenaQueryExecutionService;
-import uk.ac.ebi.fgpt.lode.utils.ParameterizedSparqlString;
 
 /**
  * @author Simon Jupp
@@ -67,6 +65,10 @@ public class JenaHttpExecutorService implements JenaQueryExecutionService {
     public Graph getDefaultGraph() {
         return null;
 
+    }
+
+    public Graph getNamedGraph(String graphName) {
+        return null;
     }
 
 }
