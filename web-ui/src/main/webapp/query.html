@@ -78,7 +78,7 @@ For optimal performance, use a custom Modernizr build: www.modernizr.com/downloa
 <body onload="$('#content').sparql({
     namespaces : lodeNamespacePrefixes,
     example_queries: exampleQueries,
-    default_query: 'SELECT ?target WHERE {\n <http://www.ebi.ac.uk/QuickGO/GTerm?id=GO:0006915> owl:sameAs  ?target \n}',
+    default_query: 'SELECT ?uris WHERE {\n <http://purl.obolibrary.org/obo/GO_0006915> owl:sameAs  ?uris \n}',
     logging: false});" class="level1 section-services"><!-- add any of your classes or IDs -->
 <div id="skip-to">
     <ul>
@@ -113,6 +113,9 @@ For optimal performance, use a custom Modernizr build: www.modernizr.com/downloa
             <!-- NB: for additional title style patterns, see http://frontier.ebi.ac.uk/web/style/patterns -->
 
             <div class="grid_12 alpha" id="local-title">
+            <!--identifiers.org beta banner-->
+                <!--              <h1 class="icon icon-generic" data-icon="&gt;"><a href="http://identifiers.org/"><img src="//static.identifiers.org/images/identifiers-org_logo-small.png" alt="Identifiers.org logo"/></a></h1>
+                -->
               <h1><a href="http://identifiers.org/"><img src="//static.identifiers.org/images/identifiers-org_logo-small.png" alt="Identifiers.org logo"/></a></h1>
             </div>
 
@@ -159,6 +162,9 @@ For optimal performance, use a custom Modernizr build: www.modernizr.com/downloa
 
     <div id="content" role="main" class="grid_24 clearfix">
         <h3>Identifiers.org SPARQL Endpoint</h3>
+        <p>This SPQRQL endpoint is specially developed to perform conversions between different URI schemes recorded in the <a href="http://identifiers.org/registry">Registry</a>.
+           Thus it does not provide access to all content stored in the <a href="http://identifiers.org/registry">Registry</a>.
+           Additional information and example queries can be found in the <a href="http://dev.identifiers.org/documentation#sparqldoc">documentation page</a>.</p>
     </div>
 
 

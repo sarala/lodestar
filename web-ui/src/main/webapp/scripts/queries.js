@@ -16,22 +16,35 @@ var exampleQueries = [
 
     {
         shortname : "Query 1",
-        description: "Find other URI schemes that can identify http://www.ebi.ac.uk/QuickGO/GTerm?id=GO:0006915",
-        query: "SELECT ?target WHERE {\n" +
-            "<http://www.ebi.ac.uk/QuickGO/GTerm?id=GO:0006915> owl:sameAs  ?target \n" +
+        description: "Find all alternative URIs equivalent to a given one",
+        query: "SELECT ?uris WHERE {\n" +
+            "<http://purl.obolibrary.org/obo/GO_0006915> owl:sameAs ?uris \n" +
             "}"
 
     },
 
     {
             shortname : "Query 2",
-            description: "Check whether two URI schemes are the same. Eg: http://www.ebi.ac.uk/QuickGO/GTerm?id=GO:0006915 and http://purl.bioontology.org/ontology/GO/GO:0006915",
+            description: "Check whether two URIs identify the same concept",
             query: "ASK  { \n" +
-                "?taget owl:sameAs  <http://www.ebi.ac.uk/QuickGO/GTerm?id=GO:0006915>; owl:sameAs <http://purl.bioontology.org/ontology/GO/GO:0006915> \n" +
+                "?similar owl:sameAs <http://identifiers.org/go/GO:0006915>; \n" +
+                "         owl:sameAs <http://purl.obolibrary.org/obo/GO_0006915> \n" +
                  "}"
 
-        }
+    },
 
+    {
+            shortname : "Query 3",
+            description: "Retrieve the description of the Gene Ontology term \"acetylcholine-gated channel complex\" from the Bio2RDF SPARQL endpoint by using its Identifiers.org URI (while Bio2RDF uses a different URI).",
+            query: "PREFIX dcterms: <http://purl.org/dc/terms/>\n\n" +
+                "SELECT DISTINCT ?description WHERE {\n" +
+                "<http://identifiers.org/go/GO:0005892> owl:sameAs ?otherURIs . \n" +
+                "   SERVICE <http://bioportal.bio2rdf.org/sparql>{ \n" +
+                "      ?otherURIs dcterms:description ?description .    \n" +
+                "   } \n" +
+                "}\n"
+
+    }
 
 ]
 

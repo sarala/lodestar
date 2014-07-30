@@ -87,7 +87,7 @@ function _parseOptions(options) {
         'results_per_page' : 25,
         'inference' : false,
         'logging' : false,
-        'default_query' : "SELECT ?target WHERE {\n<http://www.ebi.ac.uk/QuickGO/GTerm?id=GO:0006915> owl:sameAs  ?target \n}",
+        'default_query' : "SELECT ?uris WHERE {\n<http://purl.obolibrary.org/obo/GO_0006915> owl:sameAs  ?uris \n}",
         'void_query' : "SELECT DISTINCT ?s ?p ?o \nwhere {?s a <http://rdfs.org/ns/void#Dataset>\n OPTIONAL {?s ?p ?o} }",
         'namespaces' : {
             rdf: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
