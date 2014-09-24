@@ -358,6 +358,8 @@ function _buildSparqlPage(element) {
         ("<ul id='queries_list'></ul>")
     )
 
+    section2.append("<p>Additional example queries can be found in the <a href='http://www.ebi.ac.uk/rdf/documentation/biomodels/queries'>documentation</a> page.</p>")
+
     element.append(sparqlForm);
 
     var resultsSection = $("<section id='loadstar-results-section' styname='results'></section>");
