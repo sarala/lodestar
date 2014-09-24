@@ -117,11 +117,11 @@ function _parseOptions(options) {
 
 function _buildVoid(element) {
 
-/*    var voidSparql = "PREFIX dcterms: <http://purl.org/dc/terms/> " +
+    var voidSparql = "PREFIX dcterms: <http://purl.org/dc/terms/> " +
         "PREFIX void: <http://rdfs.org/ns/void#> " +
         "PREFIX pav: <http://purl.org/pav/2.0/> " +
         "PREFIX prov: <http://www.w3.org/ns/prov#> " +
-        "SELECT ?dataset ?title ?description ?version ?triples ?created ?previous " +
+        "SELECT ?dataset ?title ?description ?version ?triples ?created " +
         "where { " +
         "?dataset a void:Dataset ; " +
         "dcterms:title ?title; " +
@@ -129,26 +129,7 @@ function _buildVoid(element) {
         "pav:version ?version;      " +
         "dcterms:issued ?created;   " +
         "void:triples ?triples ;   " +
-        "prov:specializationOf ?data . " +
-        "?data pav:previousVersion ?previous .  " +
-        "}                   " +
-        "ORDER BY DESC(?previous)";*/
-
-    var voidSparql = "PREFIX dcterms: <http://purl.org/dc/terms/> " +
-        "PREFIX void: <http://rdfs.org/ns/void#> " +
-        "PREFIX pav: <http://purl.org/pav/2.0/> " +
-        "PREFIX prov: <http://www.w3.org/ns/prov#> " +
-        "SELECT ?dataset ?title ?description ?version ?triples ?created ?previous " +
-        "where { " +
-        "?dataset a void:Dataset ; " +
-        "dcterms:title ?title; " +
-        "dcterms:description ?description ;  " +
-        "pav:version ?version;      " +
-        "pav:importedOn ?created;   " +
-        "void:triples ?triples .   " +
-        "?data pav:previousVersion ?previous .  " +
-        "}                   " +
-        "ORDER BY DESC(?previous)";
+        "}";
 
     $.ajax ( {
         type: 'GET',
@@ -166,15 +147,17 @@ function _buildVoid(element) {
             var desc = _results[0].description.value;
             var version = _results[0].version.value;
             var triples = _results[0].triples.value;
-            var created = _results[0].created.value;
+            var created = $.datepicker.formatDate('MM dd yy', new Date(_results[0].created.value.replace(/T.*/, '')));
 
             var div = $("<div></div>");
-            var para =$("<p></p>");
-            para.append("Full VOID dataset description at ");
+            div.append($("<span style='font-weight:bold;'>Dataset description</span>"));
+            div.append($("<br/>"));
+//            div.append(datasetURI);
             var ea = $('<a>' + datasetURI + '</a>');
-            ea.attr('href', "./describe?uri="+datasetURI);
-            para.append(ea);
-            div.append(para)
+            ea.attr('href', datasetURI);
+            div.append("(");
+            div.append(ea);
+            div.append(")");
             element.append(div);
 
             var table = $("<table cellpadding='0' cellspacing='0' width='100%'></table>")
@@ -196,7 +179,7 @@ function _buildVoid(element) {
             table.append(row3);
 
             var row4 =$('<tr />');
-            row4.append($('<td align="left">created</td>'));
+            row4.append($('<td align="left">Issued</td>'));
             row4.append($('<td align="right">' + created + '</td>'));
             table.append(row4);
 
@@ -276,9 +259,20 @@ function _buildExplorerPage(element) {
         renderN3();
     });
 
+    var jsonimg = $('<img />');
+    jsonimg.attr('src', 'images/file_RDF_JSONLD_small.jpg');
+    jsonimg.attr('alt', 'RDF/JSON');
+    jsonimg.attr('title', 'Show RDF/JSON for this resource');
+    jsonimg.attr('style','cursor:pointer')
+    jsonimg.click(function () {
+        renderJson();
+    });
+
     downloadsSpan.append(xmlimg);
     downloadsSpan.append("&nbsp;&nbsp;");
     downloadsSpan.append(n3img);
+    downloadsSpan.append("&nbsp;&nbsp;");
+    downloadsSpan.append(jsonimg);
     $("#" + id).append(downloadsSpan);
 }
 
@@ -315,6 +309,7 @@ function _buildSparqlPage(element) {
                 .append('<option value="TSV">TSV</option>')
                 .append('<option value="RDF/XML">RDF/XML</option>')
                 .append('<option value="N3">RDF/N3</option>')
+                .append('<option value="JSON-LD">RDF/JSON</option>')
         )
     );
 
@@ -473,11 +468,14 @@ function querySparql () {
             else if (rendering.match(/RDF/)) {
                 location.href = loadestarQueryService + "?query=" + encodeURIComponent(querytext) + "&format=RDF/XML";
             }
+            else if (rendering.match(/JSON-LD/)) {
+                location.href = loadestarQueryService + "?query=" + encodeURIComponent(querytext) + "&format=JSON-LD";
+            }
             else if (rendering.match(/N3/)) {
                 location.href = loadestarQueryService + "?query=" + encodeURIComponent(querytext) + "&format=N3";
             }
             else  {
-                displayError("You can only render graph queries in either HTML, RDF/XML, or RDF/N3 format")
+                displayError("You can only render graph queries in either HTML, RDF/XML, RDF/JSON or RDF/N3 format")
                 return;
             }
         }
@@ -496,7 +494,7 @@ function querySparql () {
             else if (rendering.match(/^XML/)) {
                 location.href = loadestarQueryService + "?query=" + encodeURIComponent(querytext) + "&format=XML&limit=" + limit + "&offset=" + offset + "&inference=" + rdfs;
             }
-            else if (rendering.match(/JSON/)) {
+            else if (rendering.match(/JSON$/)) {
                 location.href = loadestarQueryService + "?query=" + encodeURIComponent(querytext) + "&format=JSON&limit=" + limit + "&offset=" + offset+ "&inference=" + rdfs;
             }
             else if (rendering.match(/CSV/)) {
@@ -1439,6 +1437,18 @@ function renderN3(uri) {
     }
 }
 
+function renderJson(uri) {
+    var match = document.location.href.match(/\?(.*)/);
+    var queryString = match ? match[1] : '';
+
+    if (queryString.match(/uri=/)) {
+        var param = this._betterUnescape(queryString.match(/uri=([^&]*)/)[1]);
+        location.href = loadestarQueryService + "?query=" + encodeURIComponent("describe<" + param + ">") + "&format=JSON-LD";
+    }
+    else if (uri != undefined) {
+        location.href = loadestarQueryService + "?query=" + encodeURIComponent("describe<" + uri + ">") + "&format=JSON-LD";
+    }
+}
 
 function _getPrefixes () {
     var prefixes = '';
