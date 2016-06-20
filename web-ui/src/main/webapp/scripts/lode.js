@@ -279,7 +279,7 @@ function _buildExplorerPage(element) {
 function _buildSparqlPage(element) {
 
 
-    var sparqlForm = $("<form id='lodestar-sparql-form' class='ui-widget ui-corner-all' name='lode-star-sparql form' action='#lodestart-sparql-results' method='GET'></form>");
+    var sparqlForm = $("<form id='lodestar-sparql-form' class='ui-widget ui-corner-all' name='lode-star-sparql form' action='#loadstar-results-section' method='GET'></form>");
     var fieldSet= $("<fieldset></fieldset>");
     fieldSet.append($("<legend>Enter SPARQL Query</legend>"));
     sparqlForm.append(fieldSet);
@@ -309,7 +309,7 @@ function _buildSparqlPage(element) {
                 .append('<option value="TSV">TSV</option>')
                 .append('<option value="RDF/XML">RDF/XML</option>')
                 .append('<option value="N3">RDF/N3</option>')
-                .append('<option value="JSON-LD">RDF/JSON</option>')
+                .append('<option value="JSON-LD">JSON-LD</option>')
         )
     );
 
@@ -451,7 +451,7 @@ function querySparql () {
 
     sparqlQueryTextArea.setValue(querytext);
 
-    var exp = /^\s*(?:PREFIX\s+\w*:\s?<[^>]*>\s*)*(\w+)\s*.*/i;
+    var exp = /^\s*(?:PREFIX\s+[^:]*:\s?<[^>]*>\s*)*(\w+)\s*.*/i;
     var match = exp.exec(querytext);
     var successFunc;
     var requestHeader;
@@ -514,7 +514,7 @@ function querySparql () {
 
     // about to execute query
     displayBusyMessage();
-    setNextPrevUrl(querytext, limit, offset);
+    setNextPrevUrl(querytext, limit, offset, rdfs);
     $.ajax ( {
         type: 'GET',
         url: loadestarQueryService + "?" + queryString,
@@ -529,14 +529,14 @@ function querySparql () {
     })
 }
 
-function setNextPrevUrl (queryString, limit, offset) {
+function setNextPrevUrl (queryString, limit, offset, rdfs) {
 
-    lodestarNextUrl = "query=" + encodeURIComponent(queryString) + "&limit=" + limit + "&offset=" + (parseInt(offset) + parseInt(lodestarResultsPerPage));
+    lodestarNextUrl = "query=" + encodeURIComponent(queryString) + "&limit=" + limit + "&inference=" + rdfs + "&offset=" + (parseInt(offset) + parseInt(lodestarResultsPerPage));
     if (offset >= lodestarResultsPerPage) {
-        loadstarPrevUrl = "query=" + encodeURIComponent(queryString) + "&limit=" + limit + "&offset=" + (parseInt(offset) - parseInt(lodestarResultsPerPage));
+        loadstarPrevUrl = "query=" + encodeURIComponent(queryString) + "&limit=" + limit + "&inference=" + rdfs + "&offset=" + (parseInt(offset) - parseInt(lodestarResultsPerPage));
     }
     else {
-        loadstarPrevUrl = "query=" + encodeURIComponent(queryString) + "&limit=" + limit + "&offset=0";
+        loadstarPrevUrl = "query=" + encodeURIComponent(queryString) + "&limit=" + limit + "&inference=" + rdfs + "&offset=0";
     }
 }
 

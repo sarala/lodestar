@@ -1,5 +1,4 @@
-Lodestar
-========
+# Lodestar
 
 Lodestar is a Linked Data Browser and SPARQL endpoint. Lodestar is a Java based web app that can wrap any existing SPARQL endpoint to provide a set of additional SPARQL and Linked Data services. Lodestar was developed to provide a consistent set of SPARQL and Linked Data services across the European Bioinformatics Institute (EBI). Some of the service provided by Lodestar:
 
@@ -23,10 +22,15 @@ To see a demonstration of the Lodestar linked data browser please see the [Expre
 
 Documentation and stable release at http://www.ebi.ac.uk/fgpt/sw/lodestar.
 
-Release Notes
-=============
+## Release Notes
 
-**1.2**  21st August 2013
+**1.3**  15th October 2014
+* Fixed potential race condition in explorer when using a small number of connection pools
+* Javascript fix to support next/prev links preserving inference option
+* IE 11 rendering issue fixed
+* Added no JNDI implementation for virtuoso connection pooling
+
+**1.2**  21st August 2014
 * Updated to Jena 2.12
 * Exposed JSON-LD support from Jena in UI 
 * Moved virtuoso to separate module, only builds in "virtuoso" profile
