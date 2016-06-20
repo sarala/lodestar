@@ -19,6 +19,7 @@
         </dependency>
 
         <dependency>
+
             <groupId>ebi-lode</groupId>
             <artifactId>lode-core-api</artifactId>
             <version>1.4-SNAPSHOT</version>
